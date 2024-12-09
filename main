@@ -1,0 +1,116 @@
+# Alonzo Gomez
+# December 9, 2024
+# Guess the Word Game Assignment
+
+import time
+import random
+
+# Word list for the game
+nagra_word_list = ["bmw", "programming", "boxing"]
+alonzo_word_list = ["gym", "deca", "engineering"]
+saif_word_list = ["gym", "chess", "geography"]
+
+# Function to display the introduction
+def introduction():
+    print("Welcome to the Guess the Word game! Mr. Nagra's class edition!")
+    time.sleep(1)
+    print("You will have to guess the word one letter at a time.")
+    print("You have a limited number of attempts to guess the word correctly.")
+    time.sleep(1.5)
+
+# Function to choose category
+def choose_category():
+    print("\nChoose your category:")
+    print("1. Mr. Nagra")
+    print("2. Alonzo")
+    print("3. Saif")
+    category = input("Enter 1, 2, or 3: ")
+
+    if category == "1":
+        return random.choice(nagra_word_list)
+    elif category == "2":
+        return random.choice(alonzo_word_list)
+    elif category == "3":
+        return random.choice(saif_word_list)
+    else:
+        print("Invalid choice! Please choose 1, 2, or 3.")
+        return choose_category()
+
+# Function to get the user's guess
+def get_guess():
+    guess = input("\nGuess a letter: ").lower()
+    while len(guess) != 1 or not guess.isalpha():  # Check if input is a single letter
+        print("Please enter a single letter.")
+        guess = input("Guess a letter: ").lower()
+    return guess
+
+# Function to play the game
+def play_game():
+    introduction()
+    word = choose_category()  # Select word based on category
+    display_word = ['_'] * len(word)  # List to track guessed letters
+    guessed_letters = []  # List to track guessed letters
+    attempts = 8  # Number of incorrect guesses allowed
+    
+    print(f"\nThe word to guess has {len(word)} letters")
+    
+    # Game loop
+    while attempts > 0:
+        print("\nCurrent word:", ' '.join(display_word))
+        print(f"Guessed letters: {', '.join(guessed_letters)}")
+        print(f"You have {attempts} attempts left!")
+        
+        guess = get_guess()
+        
+        # If the user's guess was already in the guessed letters list it will tell them they guessed already
+        if guess in guessed_letters:
+            print(f"You've already guessed the letter '{guess}'! Try again!")
+            continue
+        else:
+            guessed_letters.append(guess)
+
+        # Check if the guessed letter is in the word
+        if guess in word:
+            print(f"The letter '{guess}' is already in the word")
+            # Update the word display
+            # If the letter is in the word it replaces _ with the guessed word
+            for i in range(len(word)):
+                if word[i] == guess:
+                    display_word[i] = guess
+        else:
+            attempts -= 1
+            print(f"The letter '{guess}' is not in the word")
+
+        # Check if the user has guessed the word correctly
+        # If there are no _ displayed the user guessed the word correctly
+        if "_" not in display_word:
+            print(f"\nCongratulations! You've guessed the word: {''.join(display_word)}")
+        # Loop to replay game
+            while True:
+                replay = input("Do you want to play again? (yes/no: )").lower()
+                if replay == "yes":
+                    return play_game()
+                elif replay == "no":
+                    exit()
+                else:
+                    print("Invalid input! Put yes or no!")
+                    
+    # If statement for if the user loses                
+    if attempts == 0:
+        print(f"\nGame over! The correct word was '{word}'.")
+    # Loop to replay the game
+        while True:
+            replay = input("Do you want to play again? (yes/no: )").lower()
+            if replay == "yes":
+                return play_game()
+            elif replay == "no":
+                    exit()
+            else:
+                print("Invalid input! Put yes or no!")
+# Run the game
+print("Loading")
+for i in range(100):
+    print("-", end = "")
+    time.sleep(0.02)
+print("")
+play_game()
